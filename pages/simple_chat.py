@@ -13,21 +13,21 @@ st.title("Chatbot")
 
 openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 
+txt_input = st.text_area('Enter your text', '', height=200)
 
 
 llm_prompt = ChatPromptTemplate(
     messages=[
         SystemMessagePromptTemplate.from_template(
             # This prompt tells the chatbot how to respond. Try modifying it.
-            "Be a relgious robot"
+            f"Be a relgious robot using this text {txt_input}" , 
         ),
         HumanMessagePromptTemplate.from_template("{message}")
     ]
 )
 
 
-
-if prompt := st.chat_input(placeholder="Ask anything."):
+if prompt := st.chat_input(placeholder="Input Your Prompt Here."):
     st.chat_message("user").write(prompt)
 
     if not openai_api_key:
@@ -38,7 +38,8 @@ if prompt := st.chat_input(placeholder="Ask anything."):
     chain = LLMChain(
         llm=llm,
         prompt=llm_prompt,
-        verbose=True
+        verbose=True,
+        
     )
     with st.chat_message("assistant"):
         response = chain({"message": prompt})
